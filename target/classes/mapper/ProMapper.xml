@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.vnightray.springsqlitetest.dao.ProDao">
+
+    <resultMap id="ProEntity" type="com.vnightray.springsqlitetest.domain.ProEntity">
+        <id property="id" column="id" javaType="int"></id>
+        <result property="databaseKey" column="database_key"></result>
+        <result property="databaseUrl" column="database_url"></result>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"></result>
+    </resultMap>
+
+    <select id="list" resultType="com.vnightray.springsqlitetest.domain.ProEntity">
+        SELECT * FROM pro
+    </select>
+
+    <select id="query" parameterType="com.vnightray.springsqlitetest.domain.ProEntity"
+            resultType="com.vnightray.springsqlitetest.domain.ProEntity">
+        SELECT * FROM pro
+        WHERE 1=1
+        <if test="databaseKey!=null and databaseKey!=''">
+            AND database_key like CONCAT(CONCAT('%',#{databaseKey}),'%')
+        </if>
+    </select>
+
+    <select id="findById" parameterType="int" resultMap="ProEntity">
+        SELECT * FROM pro WHERE id = #{id} limit 1
+    </select>
+
+    <insert id="add" parameterType="com.vnightray.springsqlitetest.domain.ProEntity">
+        INSERT INTO `pro`(database_key,database_url)
+        VALUES(#{databaseKey},#{databaseUrl})
+    </insert>
+
+    <delete id="delAll">
+        DELETE FROM pro
+    </delete>
+
+    <delete id="del" parameterType="java.lang.Integer">
+        DELETE FROM pro WHERE id =#{id}
+    </delete>
+</mapper>
